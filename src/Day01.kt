@@ -17,15 +17,6 @@ fun main() {
     println(part2(input)) // 209914
 }
 
-private fun computeCalories(input: List<String>) = mutableListOf<Int>().apply {
-    var current = 0
-    input.forEach {
-        if (it.isEmpty()) {
-            this += current
-            current = 0
-        } else {
-            current += it.toInt()
-        }
-    }
-    this += current
-}
+private fun computeCalories(input: List<String>) = input
+    .partitionBy { it.isEmpty() }
+    .map { it.sumOf { line -> line.toInt() } }

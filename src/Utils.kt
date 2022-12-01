@@ -28,3 +28,8 @@ fun <T> useInput(name: String, block: (Sequence<String>) -> T) = inputFile(name)
 fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
     .toString(16)
     .padStart(32, '0')
+
+fun <T> Iterable<T>.partitionBy(shouldSplit: (T) -> Boolean): List<MutableList<T>> = fold(mutableListOf(mutableListOf())) { acc, t ->
+    if (shouldSplit(t)) acc.add(mutableListOf()) else acc.last() += t
+    return@fold acc
+}
