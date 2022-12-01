@@ -3,10 +3,24 @@ import java.math.BigInteger
 import java.security.MessageDigest
 
 /**
+ * Obtains the input text file
+ */
+fun inputFile(name: String) = File("src", "$name.txt")
+
+/**
  * Reads lines from the given input txt file.
  */
-fun readInput(name: String) = File("src", "$name.txt")
-    .readLines()
+fun readInput(name: String) = inputFile(name).readLines()
+
+/**
+ * Reads all of the lines from the input text file into a single string.
+ */
+fun readFullInput(name: String) = inputFile(name).readText()
+
+/**
+ * Performs the specified operation on each line from the input text file.
+ */
+fun <T> useInput(name: String, block: (Sequence<String>) -> T) = inputFile(name).useLines(block = block)
 
 /**
  * Converts string to md5 hash.
