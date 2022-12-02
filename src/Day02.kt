@@ -1,7 +1,7 @@
 fun main() {
-    fun part1(input: List<String>): Int = input.asSequence()
+    fun part1(input: List<String>): Int = input
         .map { arrayOf(it.first(), it.last()) }
-        .map {
+        .sumOf {
             val move = it[1] - 'X' + 1 // [1, 3]
 
             val round = when ((it[1] - 'X') - (it[0] - 'A')) {
@@ -12,11 +12,10 @@ fun main() {
 
             move + round
         }
-        .sum()
 
-    fun part2(input: List<String>): Int = input.asSequence()
+    fun part2(input: List<String>): Int = input
         .map { arrayOf(it.first(), it.last()) }
-        .map {
+        .sumOf {
             val round = (it[1] - 'X') * 3 // 0, 3, 6
 
             val other = it[0] - 'A' // [0, 2]
@@ -28,7 +27,6 @@ fun main() {
 
             move + round
         }
-        .sum()
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day02_test")
