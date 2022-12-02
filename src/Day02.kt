@@ -1,10 +1,10 @@
 fun main() {
     fun part1(input: List<String>): Int = input
-        .map { arrayOf(it.first(), it.last()) }
-        .sumOf {
-            val move = it[1] - 'X' + 1 // [1, 3]
+        .map { (it.first() - 'A') to (it.last() - 'X') }
+        .sumOf { (first, second) ->
+            val move = second + 1 // [1, 3]
 
-            val round = when ((it[1] - 'X') - (it[0] - 'A')) {
+            val round = when (second - first) {
                 0 -> 3 // draw
                 1, -2 -> 6 // win
                 else -> 0 // loss
@@ -14,15 +14,14 @@ fun main() {
         }
 
     fun part2(input: List<String>): Int = input
-        .map { arrayOf(it.first(), it.last()) }
-        .sumOf {
-            val round = (it[1] - 'X') * 3 // 0, 3, 6
+        .map { (it.first() - 'A') to (it.last() - 'X') }
+        .sumOf { (first, second) ->
+            val round = second * 3 // 0, 3, 6
 
-            val other = it[0] - 'A' // [0, 2]
             val move = when (round) {
-                0 -> other - 1 // lose
-                6 -> other + 1 // win
-                else -> other // draw
+                0 -> first - 1 // lose
+                6 -> first + 1 // win
+                else -> first // draw
             }.mod(3) + 1 // put in [1, 3]
 
             move + round
