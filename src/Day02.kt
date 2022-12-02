@@ -1,9 +1,8 @@
 fun main() {
     fun part1(input: List<String>): Int = input.asSequence()
-        .filter { it.isNotBlank() }
         .map { arrayOf(it.first(), it.last()) }
         .map {
-            val move = it[1] - 'X' + 1
+            val move = it[1] - 'X' + 1 // [1, 3]
 
             val round = when ((it[1] - 'X') - (it[0] - 'A')) {
                 0 -> 3 // draw
@@ -16,17 +15,16 @@ fun main() {
         .sum()
 
     fun part2(input: List<String>): Int = input.asSequence()
-        .filter { it.isNotBlank() }
         .map { arrayOf(it.first(), it.last()) }
         .map {
-            val round = (it[1] - 'X') * 3
+            val round = (it[1] - 'X') * 3 // 0, 3, 6
 
-            val other = it[0] - 'A'
-            val move = (when (round) {
-                0 -> other - 1
-                6 -> other + 1
+            val other = it[0] - 'A' // [0, 2]
+            val move = when (round) {
+                0 -> other - 1 // lose
+                6 -> other + 1 // win
                 else -> other // draw
-            }).mod(3) + 1
+            }.mod(3) + 1 // put in [1, 3]
 
             move + round
         }
