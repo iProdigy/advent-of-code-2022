@@ -29,7 +29,7 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
     .toString(16)
     .padStart(32, '0')
 
-fun <T> Iterable<T>.partitionBy(shouldSplit: (T) -> Boolean): List<MutableList<T>> = fold(mutableListOf(mutableListOf())) { acc, t ->
+fun <T> Iterable<T>.partitionBy(shouldSplit: (T) -> Boolean): List<List<T>> = fold(mutableListOf(mutableListOf())) { acc: MutableList<MutableList<T>>, t: T ->
     if (shouldSplit(t)) acc.add(mutableListOf()) else acc.last() += t
     return@fold acc
 }
