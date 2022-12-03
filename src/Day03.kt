@@ -1,5 +1,5 @@
 fun main() {
-    fun part1(input: List<String>): Int = input.asSequence()
+    fun part1(input: List<String>): Int = input
         .map { it.chunked(it.length / 2, CharSequence::toSet) }
         .map { (a, b) -> a.first { it in b } }
         .sumOf(::priority)
