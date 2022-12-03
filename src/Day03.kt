@@ -1,14 +1,13 @@
 fun main() {
     fun part1(input: List<String>): Int = input.asSequence()
-        .map { it.chunked(it.length / 2) }
-        .map { (first, second) -> first.toSet().intersect(second.toSet()) }
-        .flatten()
+        .map { it.chunked(it.length / 2, CharSequence::toSet) }
+        .map { (a, b) -> a.first { it in b } }
         .sumOf(::priority)
 
     fun part2(input: List<String>): Int = input
         .map { it.toSet() }
         .chunked(3)
-        .map { it.reduce { a, b -> a.intersect(b) }.first() }
+        .map { (a, b, c) -> a.first { it in b && it in c } }
         .sumOf(::priority)
 
     // test if implementation meets criteria from the description, like:
@@ -21,4 +20,4 @@ fun main() {
     println(part2(input)) // 2276
 }
 
-fun priority(c: Char): Int = 1 + if (c in 'a'..'z') c - 'a' else c - 'A' + 26
+private fun priority(c: Char): Int = 1 + if (c in 'a'..'z') c - 'a' else c - 'A' + 26
