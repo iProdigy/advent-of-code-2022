@@ -1,23 +1,14 @@
 fun main() {
     fun part1(input: List<String>): Int = input.asSequence()
-        .map {
-            val split = it.length / 2
-            it.substring(0, split) to it.substring(split)
-        }
-        .map { (first, second) ->
-            val seen = first.toCharArray().toSet()
-            second.toCharArray().filterTo(mutableSetOf()) { it in seen }
-        }
+        .map { it.chunked(it.length / 2) }
+        .map { (first, second) -> first.toSet().intersect(second.toSet()) }
         .flatten()
         .sumOf(::priority)
 
     fun part2(input: List<String>): Int = input
+        .map { it.toSet() }
         .chunked(3)
-        .map {
-            val first = it[0].toCharArray().toSet()
-            val second = it[1].toCharArray().toSet()
-            it[2].toCharArray().first { c -> c in first && c in second }
-        }
+        .map { it.reduce { a, b -> a.intersect(b) }.first() }
         .sumOf(::priority)
 
     // test if implementation meets criteria from the description, like:
