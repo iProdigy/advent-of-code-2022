@@ -33,3 +33,7 @@ fun <T> Iterable<T>.partitionBy(shouldSplit: (T) -> Boolean): List<List<T>> = fo
     if (shouldSplit(t)) acc.add(mutableListOf()) else acc.last() += t
     return@fold acc
 }
+
+infix fun IntRange.containsAll(other: IntRange) = this.first >= other.first && last <= other.last
+
+infix fun IntRange.containsAny(other: IntRange) = this.first <= other.last && this.last >= other.first
