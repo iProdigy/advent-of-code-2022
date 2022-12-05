@@ -57,7 +57,7 @@ private fun parseStacks(n: Int, initialStacks: List<String>) = (1..n).map { Arra
         .forEach { this[it.index].addLast(it.value) }
 }
 
-private val instructionRegex = Regex("^move (\\d+) from (\\d+) to (\\d+)\$")
+private val instructionRegex = Regex("^move (\\d+) from (\\d+) to (\\d+)$")
 
 private fun parseInstruction(str: String) = instructionRegex.matchEntire(str)!!.groupValues.drop(1).map { it.toInt() }
     .let { Instruction(it[0], it[1] - 1, it[2] - 1) }
