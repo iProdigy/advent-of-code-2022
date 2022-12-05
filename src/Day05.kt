@@ -1,5 +1,5 @@
 fun main() {
-    fun part1(input: List<String>): String {
+    fun solve(input: List<String>, reverse: Boolean = false): String {
         val (stacks, instructions) = parseInput(input)
 
         instructions.forEach {
@@ -8,27 +8,15 @@ fun main() {
 
             (1..it.quantity)
                 .map { from.removeFirst() }
+                .run { if (reverse) reversed() else this }
                 .forEach { c -> to.addFirst(c) }
         }
 
         return output(stacks)
     }
 
-    fun part2(input: List<String>): String {
-        val (stacks, instructions) = parseInput(input)
-
-        instructions.forEach {
-            val from = stacks[it.fromIndex]
-            val to = stacks[it.toIndex]
-
-            (1..it.quantity)
-                .map { from.removeFirst() }
-                .reversed()
-                .forEach { c -> to.addFirst(c) }
-        }
-
-        return output(stacks)
-    }
+    fun part1(input: List<String>) = solve(input)
+    fun part2(input: List<String>) = solve(input, true)
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day05_test")
@@ -57,9 +45,7 @@ private fun parseStacks(n: Int, initialStacks: List<String>) = (1..n).map { Arra
         .forEach { this[it.index].addLast(it.value) }
 }
 
-private val instructionRegex = Regex("^move (\\d+) from (\\d+) to (\\d+)$")
-
-private fun parseInstruction(str: String) = instructionRegex.matchEntire(str)!!.groupValues.drop(1).map { it.toInt() }
-    .let { Instruction(it[0], it[1] - 1, it[2] - 1) }
+private fun parseInstruction(str: String) = str.split(' ')
+    .let { Instruction(it[1].toInt(), it[3].toInt() - 1, it[5].toInt() - 1) }
 
 private data class Instruction(val quantity: Int, val fromIndex: Int, val toIndex: Int)
