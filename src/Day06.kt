@@ -1,7 +1,7 @@
 fun main() {
     fun solve(input: String, n: Int) = input
-        .windowed(n)
-        .indexOfFirst { it.toSet().size >= n } + n
+        .windowedSequence(n) { it.toHashSet() }
+        .indexOfFirst { it.size >= n } + n
 
     fun part1(input: String) = solve(input, 4)
     fun part2(input: String) = solve(input, 14)
