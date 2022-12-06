@@ -1,10 +1,7 @@
 fun main() {
     fun solve(input: String, n: Int) = input
         .windowed(n)
-        .withIndex()
-        .dropWhile { it.value.toSet().size < n }
-        .first()
-        .index + n
+        .indexOfFirst { it.toSet().size >= n } + n
 
     fun part1(input: String) = solve(input, 4)
     fun part2(input: String) = solve(input, 14)
