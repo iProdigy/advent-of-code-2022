@@ -29,8 +29,14 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
     .toString(16)
     .padStart(32, '0')
 
-fun <T> Iterable<T>.partitionBy(shouldSplit: (T) -> Boolean): List<List<T>> = fold(mutableListOf(mutableListOf())) { acc: MutableList<MutableList<T>>, t: T ->
-    if (shouldSplit(t)) acc.add(mutableListOf()) else acc.last() += t
+fun <T> Iterable<T>.partitionBy(keepDelim: Boolean = false, shouldSplit: (T) -> Boolean): List<List<T>> = fold(mutableListOf(mutableListOf())) { acc: MutableList<MutableList<T>>, t: T ->
+    val split = shouldSplit(t)
+    if (split)
+        acc.add(mutableListOf())
+
+    if (!split || keepDelim)
+        acc.last() += t
+
     return@fold acc
 }
 
