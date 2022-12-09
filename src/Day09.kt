@@ -1,4 +1,5 @@
 import kotlin.math.abs
+import kotlin.math.sign
 
 fun main() {
     fun part1(input: List<String>) = run(input, 2)
@@ -14,7 +15,7 @@ fun main() {
 }
 
 private fun run(input: List<String>, totalKnots: Int): Int {
-    val knots = (0 until totalKnots).map { 0 to 0 }.toMutableList()
+    val knots = Array(totalKnots) { 0 to 0 }
     val tailVisited = hashSetOf<Pair<Int, Int>>()
 
     input.map { it.split(' ', limit = 2) }
@@ -34,8 +35,8 @@ private fun run(input: List<String>, totalKnots: Int): Int {
                     val curr = knots[i]
                     if (prev touching curr) break
 
-                    val deltaX = (prev.first - curr.first).let { if (it > 0) 1 else if (it < 0) -1 else 0 }
-                    val deltaY = (prev.second - curr.second).let { if (it > 0) 1 else if (it < 0) -1 else 0 }
+                    val deltaX = (prev.first - curr.first).sign
+                    val deltaY = (prev.second - curr.second).sign
                     knots[i] = curr.first + deltaX to curr.second + deltaY
                 }
 
