@@ -1,6 +1,8 @@
 import java.io.File
+import java.lang.StringBuilder
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Obtains the input text file
@@ -29,7 +31,7 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
     .toString(16)
     .padStart(32, '0')
 
-fun <T> Iterable<T>.partitionBy(keepDelim: Boolean = false, shouldSplit: (T) -> Boolean): List<List<T>> = fold(mutableListOf(mutableListOf())) { acc: MutableList<MutableList<T>>, t: T ->
+inline fun <T> Iterable<T>.partitionBy(keepDelim: Boolean = false, shouldSplit: (T) -> Boolean): List<List<T>> = fold(mutableListOf(mutableListOf())) { acc: MutableList<MutableList<T>>, t: T ->
     val split = shouldSplit(t)
     if (split)
         acc.add(mutableListOf())
@@ -43,3 +45,11 @@ fun <T> Iterable<T>.partitionBy(keepDelim: Boolean = false, shouldSplit: (T) -> 
 infix fun IntRange.containsAll(other: IntRange) = this.first <= other.first && this.last >= other.last
 
 infix fun IntRange.containsAny(other: IntRange) = this.first <= other.last && this.last >= other.first
+
+operator fun StringBuilder.plusAssign(c: Char) {
+    this.append(c)
+}
+
+operator fun AtomicInteger.plusAssign(i: Int) {
+    this.addAndGet(i)
+}
