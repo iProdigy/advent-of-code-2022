@@ -13,7 +13,7 @@ fun main() {
 }
 
 private fun run(input: List<String>, rounds: Int, divideBy3: Boolean): Long {
-    val monkeys = if (input.size < 30) testMonkeys() else realMonkeys() // TODO: parse from input
+    val monkeys = parse(input).associateBy { it.id }
     val divisorProduct = monkeys.values.map { it.testDivisible }.distinct().reduce(Long::times)
     val counts = IntArray(monkeys.size)
 
@@ -33,23 +33,23 @@ private fun run(input: List<String>, rounds: Int, divideBy3: Boolean): Long {
     return counts.sortedDescending().let { (first, second) -> first.toLong() * second }
 }
 
-private fun realMonkeys() = listOf(
-    Monkey(0, ArrayDeque(listOf(77, 69, 76, 77, 50, 58)), 5, 1, 5) { it * 11 },
-    Monkey(1, ArrayDeque(listOf(75, 70, 82, 83, 96, 64, 62)), 17, 5, 6) { it + 8 },
-    Monkey(2, ArrayDeque(listOf(53)), 2, 0, 7) { it * 3 },
-    Monkey(3, ArrayDeque(listOf(85, 64, 93, 64, 99)), 7, 7, 2) { it + 4 },
-    Monkey(4, ArrayDeque(listOf(61, 92, 71)), 3, 2, 3) { it * it },
-    Monkey(5, ArrayDeque(listOf(79, 73, 50, 90)), 11, 4, 6) { it + 2 },
-    Monkey(6, ArrayDeque(listOf(50, 89)), 13, 4, 3) { it + 3 },
-    Monkey(7, ArrayDeque(listOf(83, 56, 64, 58, 93, 91, 56, 65)), 19, 1, 0) { it + 5 },
-).associateBy { it.id }
+private fun parse(input: List<String>) = input.partitionBy { it.isEmpty() }
+    .map { it.drop(1).map { line -> line.substring(line.indexOf(':') + 2) } }
+    .mapIndexed { index, (startingStr, operationStr, testStr, trueStr, falseStr) ->
+        fun last(str: String) = str.substring(str.lastIndexOf(' ') + 1)
+        val items = startingStr.split(", ").mapTo(ArrayDeque()) { it.toLong() }
 
-private fun testMonkeys() = listOf(
-    Monkey(0, ArrayDeque(listOf(79, 98)), 23, 2, 3) { it * 19 },
-    Monkey(1, ArrayDeque(listOf(54, 65, 75, 74)), 19, 2, 0) { it + 6 },
-    Monkey(2, ArrayDeque(listOf(79, 60, 97)), 13, 1, 3) { it * it },
-    Monkey(3, ArrayDeque(listOf(74)), 17, 0, 1) { it + 3 },
-).associateBy { it.id }
+        val opDelim = operationStr.lastIndexOf(' ')
+        val opNum = operationStr.substring(opDelim + 1).toLongOrNull()
+        val operation: (Long) -> Long = when {
+            operationStr.endsWith("* old") -> { it -> it * it }
+            '*' == operationStr[opDelim - 1] -> { it -> it * opNum!! }
+            '+' == operationStr[opDelim - 1] -> { it -> it + opNum!! }
+            else -> throw Error("Bad Input!")
+        }
+
+        Monkey(index, items, last(testStr).toLong(), last(trueStr).toInt(), last(falseStr).toInt(), operation)
+    }
 
 private data class Monkey(
     val id: Int,
