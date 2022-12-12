@@ -1,6 +1,27 @@
 import java.util.PriorityQueue
 import kotlin.collections.ArrayDeque
 
+fun <T> breadthFirstSearch(start: T, end: T, edges: Map<T, Collection<T>>): List<T>? {
+    val queue = ArrayDeque<T>().apply { this += start }
+    val seen = hashSetOf<T>().apply { this += start }
+    val from = hashMapOf<T, T>()
+
+    while (queue.isNotEmpty()) {
+        val current = queue.removeFirst()
+        if (current == end)
+            return reconstruct(current, from)
+
+        edges[current]?.forEach {
+            if (seen.add(it)) {
+                from[it] = current
+                queue.addLast(it)
+            }
+        }
+    }
+
+    return null
+}
+
 fun <T> findShortest(
     start: T,
     end: T,
