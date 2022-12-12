@@ -11,6 +11,11 @@ fun Point2D.manhattanDist(other: Point2D): Int = abs(this.first - other.first) +
 
 fun Point2D.euclideanDist(other: Point2D): Int = (this.first - other.first).let { it * it } + (this.second - other.second).let { it * it }
 
+fun Point2D.neighbors(minX: Int = 0, minY: Int = 0, maxX: Int = Int.MAX_VALUE, maxY: Int = Int.MAX_VALUE, diagonals: Boolean = false) = mutableListOf(-1 to 0, +1 to 0, 0 to -1, 0 to +1)
+    .apply { if (diagonals) addAll(listOf(-1 to -1, -1 to +1, +1 to +1, +1 to -1)) }
+    .map { this.first + it.first to this.second + it.second }
+    .filter { it.first in minX until maxX && it.second in minY until maxY }
+
 /**
  * Obtains the input text file
  */

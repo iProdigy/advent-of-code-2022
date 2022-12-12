@@ -1,17 +1,19 @@
 import java.util.PriorityQueue
 import kotlin.collections.ArrayDeque
 
-fun <T> breadthFirstSearch(start: T, end: T, edges: Map<T, Collection<T>>): List<T>? {
+fun <T> breadthFirstSearch(start: T, end: T, edges: Map<T, Collection<T>>) = breadthFirstSearch(start, { it == end }, { edges[it] })
+
+fun <T> breadthFirstSearch(start: T, end: (T) -> Boolean, edges: (T) -> Collection<T>?): List<T>? {
     val queue = ArrayDeque<T>().apply { this += start }
     val seen = hashSetOf<T>().apply { this += start }
     val from = hashMapOf<T, T>()
 
     while (queue.isNotEmpty()) {
         val current = queue.removeFirst()
-        if (current == end)
+        if (end(current))
             return reconstruct(current, from)
 
-        edges[current]?.forEach {
+        edges(current)?.forEach {
             if (seen.add(it)) {
                 from[it] = current
                 queue.addLast(it)

@@ -5,13 +5,12 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        val (_, end, map) = parse(input)
-        val starts = input.map { it.toCharArray() }
-            .flatMapIndexed { i, chars -> chars.mapIndexed { j, c -> (i to j) to c } }
-            .filter { (_, char) -> char == 'S' || char == 'a' }
-            .map { it.first }
-
-        return starts.minOf { findShortest(it, end, map, heuristic = Point2D::manhattanDist)?.size ?: Int.MAX_VALUE } - 1
+        val grid = input.map { it.toCharArray() }.toTypedArray()
+        val end = grid.map { it.indexOf('E') }.withIndex().first { it.value >= 0 }.let { it.index to it.value }
+        return breadthFirstSearch(end, { normalize(grid[it.first][it.second]) == 'a' }) {
+            it.neighbors(maxX = grid.size, maxY = grid[0].size)
+                .filter { from -> isConnected(from, it, grid) }
+        }!!.size - 1
     }
 
     // test if implementation meets criteria from the description, like:
@@ -43,15 +42,15 @@ private fun parse(input: List<String>): Triple<Point2D, Point2D, Map<Point2D, Co
                 end = point
             }
 
-            val candidates = listOf(i - 1 to j, i + 1 to j, i to j - 1, i to j + 1)
-                .filter { (i2, j2) -> i2 >= 0 && j2 >= 0 && i2 < grid.size && j2 < row.size }
-                .filter { (i2, j2) -> normalize(grid[i2][j2]) <= max }
-
+            val candidates = point.neighbors(maxX = grid.size, maxY = row.size).filter { isConnected(point, it, grid, max) }
             map[point] = candidates
         }
     }
 
     return Triple(start!!, end!!, map)
 }
+
+private fun isConnected(from: Point2D, to: Point2D, grid: Array<CharArray>, max: Char = normalize(grid[from.first][from.second]) + 1) =
+    normalize(grid[to.first][to.second]) <= max
 
 private fun normalize(it: Char) = if (it == 'S') 'a' else if (it == 'E') 'z' else it
