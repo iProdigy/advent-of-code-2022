@@ -3,6 +3,13 @@ import java.lang.StringBuilder
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.math.abs
+
+typealias Point2D = Pair<Int, Int>
+
+fun Point2D.manhattanDist(other: Point2D): Int = abs(this.first - other.first) + abs(this.second - other.second)
+
+fun Point2D.euclideanDist(other: Point2D): Int = (this.first - other.first).let { it * it } + (this.second - other.second).let { it * it }
 
 /**
  * Obtains the input text file
