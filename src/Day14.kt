@@ -4,7 +4,7 @@ import kotlin.math.min
 fun main() {
     fun part1(input: List<String>): Int {
         val (grid, xRange) = parse(input)
-        return simulate(grid, xRange.first, xRange.second, null)
+        return simulate(grid, xRange.first, xRange.second)
     }
 
     fun part2(input: List<String>): Int {
@@ -12,7 +12,7 @@ fun main() {
         grid[maxY + 2].run {
             indices.forEach { this[it] = true }
         }
-        return simulate(grid, x.first, x.second, maxY + 2)
+        return simulate(grid, x.first, x.second, false)
     }
 
     // test if implementation meets criteria from the description, like:
@@ -25,7 +25,7 @@ fun main() {
     println(part2(input)) // 31722
 }
 
-private fun simulate(grid: Array<BooleanArray>, minX: Int, maxX: Int, maxY: Int? = null): Int {
+private fun simulate(grid: Array<BooleanArray>, minX: Int, maxX: Int, constrainX: Boolean = true): Int {
     var dropped = 0
 
     while (true) {
@@ -33,7 +33,7 @@ private fun simulate(grid: Array<BooleanArray>, minX: Int, maxX: Int, maxY: Int?
         val (x, y) = drop(grid) ?: break
 
         // ensure placement is within bounds
-        if (maxY == null && (x < minX || x > maxX)) break
+        if (constrainX && (x < minX || x > maxX)) break
 
         // if so, indicate placed
         grid[y][x] = true
