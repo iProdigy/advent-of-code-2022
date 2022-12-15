@@ -3,11 +3,10 @@ import kotlin.math.min
 
 fun main() {
     fun part1(input: List<String>, targetY: Int = 2000000): Int {
-        var minX = Int.MAX_VALUE
-        var maxX = Int.MIN_VALUE
-
         val parsed = input.map(::parse)
 
+        var minX = Int.MAX_VALUE
+        var maxX = Int.MIN_VALUE
         parsed.forEach { (sensor, beacon) ->
             val dist = sensor.manhattanDist(beacon)
             minX = min(minX, sensor.first - dist)
@@ -32,7 +31,6 @@ fun main() {
         var maxX = Int.MIN_VALUE
         var minY = Int.MAX_VALUE
         var maxY = Int.MIN_VALUE
-
         parsed.forEach { (sensor, _) ->
             minX = min(minX, sensor.first)
             maxX = max(maxX, sensor.first)
@@ -90,4 +88,4 @@ private fun parse(line: String): Pair<Point2D, Point2D> = regex.matchEntire(line
     .groupValues
     .drop(1)
     .map { it.toInt() }
-    .let { (x, y, x1, y1) -> (x to y) to (x1 to y1) }
+    .let { (sensorX, sensorY, beaconX, beaconY) -> (sensorX to sensorY) to (beaconX to beaconY) }
